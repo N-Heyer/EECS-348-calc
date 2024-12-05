@@ -1,3 +1,5 @@
+#include <iostream>
+#include <cctype>
 #include <string>
 #include <stack>
 
@@ -43,7 +45,7 @@ double evaluate(const std::string& expr) {
                 numbers.push(calc(a, b, op));
             }
             operators.pop(); // pop the paren
-        } else { 
+        } else { // uses pemdas to evaluate what to do first and pushes to stack
             while (!operators.empty() && pemdas(operators.top()) >= pemdas(expr[i])) {
                 double b = numbers.top(); numbers.pop();
                 double a = numbers.top(); numbers.pop();
@@ -54,14 +56,24 @@ double evaluate(const std::string& expr) {
         }
     }
 
-    while (!operators.empty()) {
+    while (!operators.empty()) { // all remaining op are applied to stack
         double b = numbers.top(); numbers.pop();
         double a = numbers.top(); numbers.pop();
         char op = operators.top(); operators.pop();
         numbers.push(calc(a, b, op));
     }
 
-    return numbers.top(); // answer to eq
+    return numbers.top(); // answer to eq aka last num in stack 
 
 }
 
+int main() { // gets user input that can be taken out for UI 
+    std::string input; 
+    std::cout << "Enter an equation: ";
+    std::getline(std::cin, input); // reads input line 
+
+    double result = evaluate(input); // calls the eval func
+    std::cout << "Answer: " << result << std::endl; // prints answer
+
+    return 0;
+}
